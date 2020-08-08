@@ -67,8 +67,13 @@ class Game:
             if self.playerTurn == 0:
                 if self.board[row][col] == 0:
                     self.board[row][col] = -1
+                    self.playerTurn += 1
+                    return True
+                else:
+                    return False
         else:
             self.board[x][y] = +1
+            self.playerTurn -= 1
 
     def update(self):
         self.clock.tick(self.FPS)
@@ -105,7 +110,10 @@ class Game:
         if self.tied() == True:
             endText = self.endFont.render("Tied!", 1, (0,0,0))
         else:
-            endText = self.endFont.render("Player {} Wins!".format(game.playerTurn+1), 1, (0,0,0))
+            if self.winner == "x":
+                endText = self.endFont.render("Player 1 Wins!", 1, (0,0,0))
+            else:
+                endText = self.endFont.render("Player 2 Wins!", 1, (0,0,0))
         text = endText.get_rect(center=(310,310))
         self.display.blit(endText, text)
         pygame.display.update()
@@ -173,10 +181,10 @@ class Game:
             score[0], score[1] = x, y
             if player == self.COMP:
                 if score[2] > best[2]:
-                    best = score  # max value
+                    best = score
             else:
                 if score[2] < best[2]:
-                    best = score  # min value
+                    best = score
         return best
 
     def aiTurn(self):
